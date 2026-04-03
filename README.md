@@ -34,7 +34,7 @@ Base URL (when running locally): `http://localhost:5000`
 
 3. Run the Flask app:
 
-   * `python app.py`
+   * `python3 app.py`
    * Open `http://localhost:5000/healthz`
 
 The service uses a local sqlite database file by default: `aceest.db`.
@@ -44,7 +44,7 @@ For tests you can override `DB_PATH` via `create_app(...)` in code.
 
 From the repository root:
 
-* `python -m pytest -q`
+* `python3 -m pytest -q`
 
 ## Docker
 
@@ -58,7 +58,7 @@ From the repository root:
 
 ### Run tests inside the container
 
-* `docker run --rm aceest:local python -m pytest -q`
+* `docker run --rm aceest:local python3 -m pytest -q`
 
 ## Jenkins Integration (Quality Gate)
 
