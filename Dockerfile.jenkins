@@ -1,0 +1,14 @@
+FROM jenkins/jenkins:lts
+
+# We need to run as root to install Python
+USER root
+
+# Install Python and its venv packages so your Jenkinsfile can run them
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-venv \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Switch back to the jenkins user for safety
+USER jenkins
