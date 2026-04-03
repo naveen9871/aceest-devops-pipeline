@@ -62,6 +62,9 @@ From the repository root:
 * `docker run --rm aceest:local python3 -m pytest -q --cov=aceest_app`
 
 ## Jenkins Integration (Quality Gate)
+> **Proof of Execution:** Below is the automated playback of Jenkins launching and running our PyTest suite natively:
+
+![Jenkins Local Integration Run](./docs/jenkins_video.webp)
 
 `Jenkinsfile` performs a clean build and validation by:
 
