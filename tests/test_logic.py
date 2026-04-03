@@ -1,6 +1,5 @@
 from datetime import date
 
-import pytest
 
 from aceest_app.logic import (
     bmi_category,

@@ -1,5 +1,6 @@
 # ACEest Fitness & Gym (Flask) - CI/CD Assignment
 
+[![CI](https://github.com/naveen9871/aceest-devops-pipeline/actions/workflows/main.yml/badge.svg)](https://github.com/naveen9871/aceest-devops-pipeline/actions/workflows/main.yml)
 This repository contains a lightweight Flask web service that models a fitness & gym management workflow (clients, progress logging, workouts, metrics analytics) along with:
 
 * `pytest` unit/integration tests
@@ -44,7 +45,7 @@ For tests you can override `DB_PATH` via `create_app(...)` in code.
 
 From the repository root:
 
-* `python3 -m pytest -q`
+* `python3 -m pytest -q --cov=aceest_app`
 
 ## Docker
 
@@ -58,7 +59,7 @@ From the repository root:
 
 ### Run tests inside the container
 
-* `docker run --rm aceest:local python3 -m pytest -q`
+* `docker run --rm aceest:local python3 -m pytest -q --cov=aceest_app`
 
 ## Jenkins Integration (Quality Gate)
 
@@ -67,8 +68,8 @@ From the repository root:
 1. Checking out the latest code from SCM (`checkout scm`)
 2. Creating a fresh python virtual environment (`python3 -m venv .venv`)
 3. Installing dependencies (`pip install -r requirements.txt`)
-4. Running a syntax/compile gate (`python -m compileall -q .`)
-5. Running tests (`python -m pytest -q`)
+4. Running a syntax & lint gate (`python -m compileall -q .` and `flake8`)
+5. Running tests with coverage (`python -m pytest -q --cov=aceest_app`)
 
 To configure Jenkins:
 

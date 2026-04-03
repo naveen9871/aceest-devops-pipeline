@@ -21,8 +21,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Syntax check (compileall)
-        run: python -m compileall -q .
+      - name: Syntax & Lint check
+        run: |
+          python -m compileall -q .
+          flake8 aceest_app tests app.py
 
   docker-build-and-test:
     runs-on: ubuntu-latest
@@ -35,5 +37,5 @@ jobs:
         run: docker build -t aceest:ci .
 
       - name: Run tests inside Docker
-        run: docker run --rm aceest:ci python -m pytest -q
+        run: docker run --rm aceest:ci python3 -m pytest -q --cov=aceest_app
 
