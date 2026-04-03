@@ -1,6 +1,5 @@
 import hashlib
 import random
-from dataclasses import dataclass
 from datetime import date, datetime
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -74,7 +73,15 @@ def program_factor(program: Optional[str]) -> float:
 EXERCISE_POOLS: Dict[str, List[str]] = {
     "full_body": ["Squat", "Deadlift", "Bench Press", "Overhead Press", "Row", "Pull-Up", "Lunge", "Plank"],
     "strength": ["Squat", "Deadlift", "Bench Press", "Overhead Press", "Pull-Up", "Barbell Row", "Lunge", "Hip Hinge"],
-    "hypertrophy": ["Leg Press", "Incline Dumbbell Press", "Lat Pulldown", "Lateral Raise", "Bicep Curl", "Tricep Extension", "Leg Curl"],
+    "hypertrophy": [
+        "Leg Press",
+        "Incline Dumbbell Press",
+        "Lat Pulldown",
+        "Lateral Raise",
+        "Bicep Curl",
+        "Tricep Extension",
+        "Leg Curl",
+    ],
     "conditioning": ["Running", "Cycling", "Rowing", "Burpees", "Jump Rope", "Kettlebell Swings", "Jump Lunges"],
 }
 

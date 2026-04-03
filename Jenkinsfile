@@ -17,7 +17,8 @@ pipeline {
           pip install --upgrade pip
           pip install -r requirements.txt
           python -m compileall -q .
-          python -m pytest -q
+          flake8 aceest_app tests app.py
+          python -m pytest -q --cov=aceest_app
         '''
       }
     }

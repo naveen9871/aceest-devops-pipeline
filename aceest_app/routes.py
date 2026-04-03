@@ -1,8 +1,7 @@
-import os
 from datetime import date, datetime
 from typing import Any, Dict, Optional
 
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, jsonify, request
 
 from aceest_app.db import get_db
 from aceest_app.logic import (
@@ -117,7 +116,7 @@ def get_client(name: str):
     height_cm = client["height_cm"]
     weight_kg = client["weight_kg"]
     bmi = None
-    category = None
+
     if height_cm and weight_kg:
         bmi_val = calculate_bmi(float(weight_kg), float(height_cm))
         bmi = bmi_val
@@ -293,14 +292,12 @@ def analytics(name: str):
     weight_kg = client["weight_kg"]
     bmi = None
     bmi_cat = None
+    risk = None
     if height_cm and weight_kg:
         bmi = calculate_bmi(float(weight_kg), float(height_cm))
         from aceest_app.logic import bmi_category
 
         bmi_cat, risk = bmi_category(bmi)
-    else:
-        bmi_cat = None
-        risk = None
 
     cur = conn.execute(
         """
@@ -353,7 +350,7 @@ def program_endpoint(name: str):
         except Exception:
             return _error("seed must be an integer", 400)
 
-    conn = get_db()
+    get_db()
     if _get_client(name) is None:
         return _error("Client not found", 404)
 
