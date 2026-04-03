@@ -17,7 +17,7 @@ We've created a custom Dockerfile for Jenkins (`Dockerfile.jenkins`) that pre-in
    *(Copy the 32-character string it spits out).*
 
 ## 2. Configure the Jenkins Server
-1. Open your web browser and navigate to: [http://localhost:8080](http://localhost:8080)
+1. Open your web browser and navigate to: [http://localhost:8085](http://localhost:8085)
 2. **Unlock Jenkins**: Paste the password you copied from the logs.
 3. **Customize Jenkins**: Click **"Install suggested plugins"**. Wait for this to finish (this simulates installing Git, Pipeline, etc.).
 4. **Admin User**: Either create an admin user or click "Skip and continue as admin".
