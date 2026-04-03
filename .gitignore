@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.db
+*.sqlite
+aceest.db
+dist/
+build/
+.DS_Store
+
+# Baseline/unrelated desktop scripts
+Aceestver*.py
+
