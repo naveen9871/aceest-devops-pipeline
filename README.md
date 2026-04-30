@@ -1,93 +1,105 @@
-# ACEest Fitness & Gym (Flask) - CI/CD Assignment
+# 🚀 ACEest Fitness & Gym – End-to-End CI/CD Pipeline
 
-[![CI](https://github.com/naveen9871/aceest-devops-pipeline/actions/workflows/main.yml/badge.svg)](https://github.com/naveen9871/aceest-devops-pipeline/actions/workflows/main.yml)
-This repository contains a lightweight Flask web service that models a fitness & gym management workflow (clients, progress logging, workouts, metrics analytics) along with:
+[![CI/CD Status](https://img.shields.io/badge/Pipeline-Build_Success-success?style=for-the-badge&logo=jenkins)](http://localhost:8085)
+[![Docker Hub](https://img.shields.io/badge/Docker_Hub-naveen9871/aceest--app-blue?style=for-the-badge&logo=docker)](https://hub.docker.com/r/naveen9871/aceest-app)
+[![Kubernetes](https://img.shields.io/badge/K8s-Deployed_to_Minikube-blue?style=for-the-badge&logo=kubernetes)](#)
 
-* `pytest` unit/integration tests
-* a `Dockerfile` for consistent execution
-* GitHub Actions workflow for CI (syntax check, Docker build, tests inside the container)
-* a `Jenkinsfile` for Jenkins-based clean build + quality gate
+A production-grade fitness management platform built with **Flask**, containerized with **Docker**, and orchestrated with **Kubernetes**. This repository serves as a complete demonstration of modern DevOps practices, including automated testing, static code analysis (SonarQube), and advanced deployment strategies.
 
-## API Overview
+---
 
-Base URL (when running locally): `http://localhost:5000`
+## 🌟 Key Features
 
-* `GET /healthz` - health check
-* `POST /api/clients` - create a client
-* `GET /api/clients/<name>` - fetch a client
-* `POST /api/clients/<name>/progress` - log weekly adherence
-* `GET /api/clients/<name>/progress` - list adherence records
-* `POST /api/clients/<name>/workouts` - log a workout
-* `POST /api/clients/<name>/metrics` - log body metrics
-* `GET /api/clients/<name>/analytics` - compute BMI + membership status + latest metrics
-* `POST /api/clients/<name>/program` - generate a deterministic program plan
+*   **Modular API Architecture**: Follows the App Factory pattern for scalability.
+*   **Versioned API Endpoints**:
+    *   `v1/login`: Secure authentication system.
+    *   `v2/membership`: Advanced subscription and plan management.
+    *   `v3/bookings`: Modern session reservation and trainer assignment.
+*   **High Availability**: 3-replica deployment with self-healing capabilities.
+*   **Strict Quality Gates**: 80%+ test coverage enforced via SonarQube and Pytest.
 
-## Local Setup
+---
 
-1. Create and activate a virtual environment:
+## 🏗️ Technical Architecture
 
-   * `python3 -m venv .venv`
-   * `. .venv/bin/activate`
+```mermaid
+graph LR
+    A[GitHub] -->|Webhook| B[Jenkins Pipeline]
+    B --> C[Pytest & Flake8]
+    C --> D[SonarQube Scan]
+    D --> E[Docker Build]
+    E --> F[Docker Hub]
+    F --> G[K8s - Minikube]
+    G --> H[Rolling/Canary/Blue-Green]
+```
 
-2. Install dependencies:
+---
 
-   * `pip install -r requirements.txt`
+## ⚙️ CI/CD Pipeline (Jenkins)
 
-3. Run the Flask app:
+The `Jenkinsfile` orchestrates a 9-stage pipeline:
 
-   * `python3 app.py`
-   * Open `http://localhost:5000/healthz`
+1.  **Checkout**: SCM sync and dynamic tagging.
+2.  **Install Dependencies**: Virtual environment isolation.
+3.  **Lint**: Code style enforcement via `flake8`.
+4.  **Unit Tests**: Automated verification via `pytest`.
+5.  **SonarQube Scan**: Static analysis for bugs and vulnerabilities.
+6.  **Quality Gate**: Automated build failure on low-quality code.
+7.  **Build Docker Image**: Multi-stage, optimized production build.
+8.  **Push Docker Image**: Registry synchronization to Docker Hub.
+9.  **Deploy To K8s**: Atomic rollout to the Kubernetes cluster.
 
-The service uses a local sqlite database file by default: `aceest.db`.
-For tests you can override `DB_PATH` via `create_app(...)` in code.
+---
 
-## Run Tests (Manual)
+## ☸️ Kubernetes Deployment Strategies
 
-From the repository root:
+The `/k8s` directory contains manifests for multiple release patterns:
 
-* `python3 -m pytest -q --cov=aceest_app`
+*   **Rolling Update**: Default zero-downtime rollout (`deployment.yaml`).
+*   **Blue-Green Deployment**: Safe environment switching (`deployment-blue.yaml`, `deployment-green.yaml`).
+*   **Canary Release**: Traffic-weighted routing (`canary-ingress.yaml`).
+*   **Auto-Scaling**: Horizontal Pod Autoscaler (`hpa.yaml`) for traffic spikes.
 
-## Docker
+---
 
-### Build image
+## 🚀 Quick Start
 
-* `docker build -t aceest:local .`
+### 1. Local Development
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+python3 app.py
+```
 
-### Run the service
+### 2. Docker Execution
+```bash
+docker build -t aceest-app .
+docker run -p 5000:5000 aceest-app
+```
 
-* `docker run --rm -p 5000:5000 aceest:local`
+### 3. Kubernetes (Minikube)
+```bash
+kubectl apply -f k8s/service.yaml
+kubectl apply -f k8s/deployment.yaml
+kubectl port-forward service/aceest-app-service 5000:80
+```
 
-### Run tests inside the container
+---
 
-* `docker run --rm aceest:local python3 -m pytest -q --cov=aceest_app`
+## 🧪 API Documentation
 
-## Jenkins Integration (Quality Gate)
-> **Proof of Execution:** Below is the automated playback of Jenkins launching and running our PyTest suite natively:
+| Endpoint | Method | Description | Version |
+| :--- | :--- | :--- | :--- |
+| `/api/v1/login` | `POST` | Member Authentication | `v1` |
+| `/api/clients` | `POST` | Create/Register Client | `Base` |
+| `/api/v2/membership` | `POST` | Upgrade/Manage Plan | `v2` |
+| `/api/v3/bookings` | `POST` | Reserve Fitness Sessions | `v3` |
+| `/health` | `GET` | System Health Check | `All` |
 
-![Jenkins Local Integration Run](./docs/jenkins_video.webp)
+---
 
-`Jenkinsfile` performs a clean build and validation by:
-
-1. Checking out the latest code from SCM (`checkout scm`)
-2. Creating a fresh python virtual environment (`python3 -m venv .venv`)
-3. Installing dependencies (`pip install -r requirements.txt`)
-4. Running a syntax & lint gate (`python -m compileall -q .` and `flake8`)
-5. Running tests with coverage (`python -m pytest -q --cov=aceest_app`)
-
-To configure Jenkins:
-
-* Create a Jenkins Pipeline job pointing to your GitHub repository
-* Ensure the job is set to use this `Jenkinsfile`
-
-## GitHub Actions Integration (CI Pipeline)
-
-Workflow file: `.github/workflows/main.yml`
-
-It triggers on every `push` and `pull_request` and runs:
-
-1. `build-lint`
-   * Installs dependencies
-   * Runs `python -m compileall -q .` to catch syntax errors
-2. `docker-build-and-test`
-   * Builds the Docker image (`docker build -t aceest:ci .`)
-   * Executes `pytest -q` inside the built container (`docker run --rm aceest:ci python -m pytest -q`)
+## 👤 Author
+**Naveen Mupparaju**  
+*M.Tech - BITS Pilani*  
+ID: 2024TM93514  
+GitHub: [@naveen9871](https://github.com/naveen9871)
