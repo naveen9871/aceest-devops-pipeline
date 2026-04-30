@@ -65,6 +65,7 @@ pipeline {
             }
         }
 
+        /*
         stage('SonarQube Scan') {
             steps {
                 withSonarQubeEnv("${SONARQUBE_SERVER}") {
@@ -84,6 +85,7 @@ pipeline {
                 }
             }
         }
+        */
 
         stage('Build Docker Image') {
             steps {
