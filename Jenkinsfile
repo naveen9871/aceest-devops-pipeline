@@ -5,7 +5,7 @@ pipeline {
         APP_NAME = "aceest-app"
         DOCKER_IMAGE = "naveen1312/aceest-app"
         IMAGE_TAG = "${env.BUILD_NUMBER}"
-        SONARQUBE_SERVER = "http://host.docker.internal:9000"
+        SONARQUBE_SERVER = "http://sonarqube:9000"
         KUBE_NAMESPACE = "default"
     }
 
@@ -69,6 +69,26 @@ pipeline {
             post {
                 always {
                     archiveArtifacts artifacts: 'coverage.xml', onlyIfSuccessful: false
+                }
+            }
+        }
+
+        
+        stage('Wait for SonarQube') {
+            steps {
+                script {
+                    echo "Waiting for SonarQube to be ready at ${SONARQUBE_SERVER}..."
+                    timeout(time: 5, unit: 'MINUTES') {
+                        waitUntil {
+                            try {
+                                sh "curl -s -f ${SONARQUBE_SERVER}/api/system/status"
+                                return true
+                            } catch (Exception e) {
+                                return false
+                            }
+                        }
+                    }
+                    echo "SonarQube is UP and running!"
                 }
             }
         }
