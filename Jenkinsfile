@@ -60,7 +60,6 @@ pipeline {
             }
             post {
                 always {
-                    junit 'pytest-report.xml'
                     archiveArtifacts artifacts: 'coverage.xml', onlyIfSuccessful: false
                 }
             }
@@ -142,9 +141,6 @@ pipeline {
         }
         failure {
             echo 'Pipeline failed. Check the failed stage logs and SonarQube quality gate.'
-        }
-        always {
-            cleanWs(deleteDirs: true, notFailBuild: true)
         }
     }
 }
