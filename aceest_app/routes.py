@@ -38,6 +38,7 @@ def _require_json(expected_keys: set[str]) -> Optional[Dict[str, Any]]:
 
 
 @api_bp.get("/healthz")
+@api_bp.get("/health")
 def healthz():
     return jsonify({"status": "ok"})
 
