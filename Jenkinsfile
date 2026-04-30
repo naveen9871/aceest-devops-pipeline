@@ -5,7 +5,7 @@ pipeline {
         APP_NAME = "aceest-app"
         DOCKER_IMAGE = "naveen1312/aceest-app"
         IMAGE_TAG = "${env.BUILD_NUMBER}"
-        SONARQUBE_SERVER = "http://sonarqube:9000"
+        SONARQUBE_SERVER = "http://host.docker.internal:9000"
         KUBE_NAMESPACE = "default"
     }
 
