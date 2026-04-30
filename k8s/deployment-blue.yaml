@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aceest-app-blue
+  labels:
+    app: aceest-app
+    version: blue
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: aceest-app
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: aceest-app
+        version: blue
+    spec:
+      containers:
+        - name: aceest-app
+          image: naveen9871/aceest-app:stable
+          ports:
+            - containerPort: 5000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10

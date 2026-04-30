@@ -95,3 +95,54 @@ def test_program_endpoint_returns_deterministic_plan(client):
     assert res2.status_code == 201
     assert res1.get_json()["program_plan"] == res2.get_json()["program_plan"]
 
+
+def test_versioned_login_membership_and_booking_flow(client):
+    create_res = client.post(
+        "/api/clients",
+        json={
+            "name": "Kiran",
+            "age": 27,
+            "height_cm": 172,
+            "weight_kg": 74,
+            "program": "Beginner",
+            "membership_end": "2099-01-01",
+        },
+    )
+    assert create_res.status_code == 201
+
+    login_res = client.post(
+        "/api/v1/login",
+        json={"username": "kiran", "password": "securepass"},
+    )
+    assert login_res.status_code == 200
+    assert login_res.get_json()["api_version"] == "v1"
+
+    membership_res = client.post(
+        "/api/v2/membership",
+        json={
+            "client_name": "Kiran",
+            "plan_name": "Premium Strength",
+            "membership_end": "2099-06-30",
+        },
+    )
+    assert membership_res.status_code == 200
+    assert membership_res.get_json()["plan_name"] == "Premium Strength"
+
+    booking_res = client.post(
+        "/api/v3/bookings",
+        json={
+            "client_name": "Kiran",
+            "session_name": "Morning HIIT",
+            "booking_date": "2026-05-10",
+            "trainer": "Asha",
+        },
+    )
+    assert booking_res.status_code == 201
+    assert booking_res.get_json()["api_version"] == "v3"
+
+    list_res = client.get("/api/v3/bookings/Kiran")
+    assert list_res.status_code == 200
+    data = list_res.get_json()
+    assert len(data["bookings"]) == 1
+    assert data["bookings"][0]["session_name"] == "Morning HIIT"
+

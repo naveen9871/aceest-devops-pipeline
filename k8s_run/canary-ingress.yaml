@@ -14,6 +14,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: aceest-app-canary-service
+            name: aceest-app-service
             port:
               number: 80

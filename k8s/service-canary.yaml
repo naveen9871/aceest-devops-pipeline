@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: aceest-app-canary-service
+spec:
+  selector:
+    app: aceest-app
+    track: canary
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000

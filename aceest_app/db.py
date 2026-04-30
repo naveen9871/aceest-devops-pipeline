@@ -90,6 +90,18 @@ def init_db(conn: Optional[sqlite3.Connection] = None) -> None:
             )
             """
         )
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS bookings (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                client_name TEXT NOT NULL,
+                session_name TEXT NOT NULL,
+                booking_date TEXT NOT NULL,
+                trainer TEXT,
+                FOREIGN KEY(client_name) REFERENCES clients(name)
+            )
+            """
+        )
 
     conn.commit()
 

@@ -43,6 +43,28 @@ def healthz():
     return jsonify({"status": "ok"})
 
 
+@api_bp.post("/api/v1/login")
+def login():
+    if not request.is_json:
+        return _error("Expected JSON body", 400)
+
+    payload = request.get_json(silent=True) or {}
+    username = str(payload.get("username", "")).strip()
+    password = str(payload.get("password", "")).strip()
+
+    if not username or not password:
+        return _error("username and password are required", 400)
+
+    return jsonify(
+        {
+            "message": "Login successful",
+            "username": username,
+            "role": "member",
+            "api_version": "v1",
+        }
+    )
+
+
 @api_bp.post("/api/clients")
 def create_client():
     try:
@@ -282,6 +304,49 @@ def add_metrics(name: str):
     return jsonify({"client_name": name, "date": date_value}), 201
 
 
+@api_bp.post("/api/v2/membership")
+def upsert_membership():
+    if not request.is_json:
+        return _error("Expected JSON body", 400)
+
+    payload = request.get_json(silent=True) or {}
+    client_name = str(payload.get("client_name", "")).strip()
+    plan_name = str(payload.get("plan_name", "")).strip()
+    membership_end = str(payload.get("membership_end", "")).strip()
+
+    if not client_name or not plan_name or not membership_end:
+        return _error("client_name, plan_name and membership_end are required", 400)
+
+    try:
+        parse_iso_date(membership_end)
+    except Exception:
+        return _error("membership_end must be in YYYY-MM-DD format", 400)
+
+    conn = get_db()
+    if _get_client(client_name) is None:
+        return _error("Client not found", 404)
+
+    conn.execute(
+        """
+        UPDATE clients
+        SET program = ?, membership_end = ?
+        WHERE name = ?
+        """,
+        (plan_name, membership_end, client_name),
+    )
+    conn.commit()
+
+    return jsonify(
+        {
+            "client_name": client_name,
+            "plan_name": plan_name,
+            "membership_end": membership_end,
+            "membership_status": membership_status(membership_end),
+            "api_version": "v2",
+        }
+    )
+
+
 @api_bp.get("/api/clients/<string:name>/analytics")
 def analytics(name: str):
     conn = get_db()
@@ -367,4 +432,78 @@ def program_endpoint(name: str):
         return _error(str(e), 400)
 
     return jsonify({"client_name": name, "program_plan": plan}), 201
+
+
+@api_bp.post("/api/v3/bookings")
+def create_booking():
+    if not request.is_json:
+        return _error("Expected JSON body", 400)
+
+    payload = request.get_json(silent=True) or {}
+    client_name = str(payload.get("client_name", "")).strip()
+    session_name = str(payload.get("session_name", "")).strip()
+    booking_date = str(payload.get("booking_date", "")).strip()
+    trainer = str(payload.get("trainer", "")).strip() or None
+
+    if not client_name or not session_name or not booking_date:
+        return _error("client_name, session_name and booking_date are required", 400)
+
+    try:
+        parse_iso_date(booking_date)
+    except Exception:
+        return _error("booking_date must be in YYYY-MM-DD format", 400)
+
+    conn = get_db()
+    if _get_client(client_name) is None:
+        return _error("Client not found", 404)
+
+    conn.execute(
+        """
+        INSERT INTO bookings (client_name, session_name, booking_date, trainer)
+        VALUES (?, ?, ?, ?)
+        """,
+        (client_name, session_name, booking_date, trainer),
+    )
+    conn.commit()
+
+    return jsonify(
+        {
+            "client_name": client_name,
+            "session_name": session_name,
+            "booking_date": booking_date,
+            "trainer": trainer,
+            "api_version": "v3",
+        }
+    ), 201
+
+
+@api_bp.get("/api/v3/bookings/<string:name>")
+def list_bookings(name: str):
+    conn = get_db()
+    if _get_client(name) is None:
+        return _error("Client not found", 404)
+
+    cur = conn.execute(
+        """
+        SELECT session_name, booking_date, trainer
+        FROM bookings
+        WHERE client_name = ?
+        ORDER BY booking_date ASC, id ASC
+        """,
+        (name,),
+    )
+    rows = cur.fetchall()
+    return jsonify(
+        {
+            "client_name": name,
+            "bookings": [
+                {
+                    "session_name": row["session_name"],
+                    "booking_date": row["booking_date"],
+                    "trainer": row["trainer"],
+                }
+                for row in rows
+            ],
+        }
+    )
 
