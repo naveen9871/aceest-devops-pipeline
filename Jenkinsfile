@@ -65,27 +65,18 @@ pipeline {
             }
         }
 
-        /*
         stage('SonarQube Scan') {
             steps {
-                withSonarQubeEnv("${SONARQUBE_SERVER}") {
-                    sh '''
-                        set -eux
-                        . .venv/bin/activate
-                        sonar-scanner
-                    '''
-                }
+                sh '''
+                    set -eux
+                    . .venv/bin/activate
+                    sonar-scanner \
+                        -Dsonar.host.url=${SONARQUBE_SERVER} \
+                        -Dsonar.login=admin \
+                        -Dsonar.password=admin123
+                '''
             }
         }
-
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-        */
 
         stage('Build Docker Image') {
             steps {
