@@ -35,6 +35,13 @@ pipeline {
                     . .venv/bin/activate
                     pip install --upgrade pip
                     pip install -r requirements.txt
+                    
+                    # Install sonar-scanner if not present
+                    if ! command -v sonar-scanner &> /dev/null; then
+                        curl -sSLo /tmp/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+                        unzip -o /tmp/sonar-scanner.zip -d /tmp/
+                        mv /tmp/sonar-scanner-5.0.1.3006-linux /tmp/sonar-scanner
+                    fi
                 '''
             }
         }
@@ -71,7 +78,7 @@ pipeline {
                     sh '''
                         set -eux
                         . .venv/bin/activate
-                        sonar-scanner \
+                        /tmp/sonar-scanner/bin/sonar-scanner \
                             -Dsonar.host.url=${SONARQUBE_SERVER} \
                             -Dsonar.login=${SONAR_USER} \
                             -Dsonar.password=${SONAR_PASS}
