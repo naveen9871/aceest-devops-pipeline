@@ -79,8 +79,8 @@ pipeline {
                 sh '''
                 export KUBECONFIG=$KUBECONFIG_PATH
                 sed -i "s/IMAGE_TAG/${DOCKER_TAG}/g" k8s/deployment.yaml
-                kubectl apply -f k8s/deployment.yaml
-                kubectl apply -f k8s/service.yaml
+                kubectl apply -f k8s/deployment.yaml --insecure-skip-tls-verify
+                kubectl apply -f k8s/service.yaml --insecure-skip-tls-verify
                 '''
             }
         }
