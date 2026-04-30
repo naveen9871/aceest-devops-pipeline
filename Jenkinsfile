@@ -40,6 +40,7 @@ pipeline {
                     if ! command -v sonar-scanner &> /dev/null; then
                         curl -sSLo /tmp/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006.zip
                         unzip -o /tmp/sonar-scanner.zip -d /tmp/
+                        rm -rf /tmp/sonar-scanner
                         mv /tmp/sonar-scanner-5.0.1.3006 /tmp/sonar-scanner
                     fi
                 '''
