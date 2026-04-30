@@ -67,14 +67,21 @@ pipeline {
 
         stage('SonarQube Scan') {
             steps {
-                sh '''
-                    set -eux
-                    . .venv/bin/activate
-                    sonar-scanner \
-                        -Dsonar.host.url=${SONARQUBE_SERVER} \
-                        -Dsonar.login=admin \
-                        -Dsonar.password=admin123
-                '''
+                withSonarQubeEnv('SonarQube-Server') {
+                    sh '''
+                        set -eux
+                        . .venv/bin/activate
+                        sonar-scanner
+                    '''
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
 
