@@ -19,7 +19,14 @@ spec:
     spec:
       containers:
         - name: aceest-app
-          image: naveen9871/aceest-app:canary
+          image: naveen1312/aceest-app:latest
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "100m"
+            limits:
+              memory: "64Mi"
+              cpu: "250m"
           ports:
             - containerPort: 5000
           readinessProbe:
