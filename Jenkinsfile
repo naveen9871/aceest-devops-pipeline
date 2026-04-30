@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = "naveen9871/aceest-app"
         DOCKER_TAG = "${env.BUILD_NUMBER}"
         SONARQUBE_SERVER = "sonarqube"
-        KUBECONFIG = credentials('kubeconfig-credentials')
+        KUBECONFIG_PATH = "/var/jenkins_home/kubeconfig"
         DOCKER_CRED = credentials('dockerhub-credentials')
     }
 
@@ -69,7 +69,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 sh '''
-                export KUBECONFIG=$KUBECONFIG
+                export KUBECONFIG=$KUBECONFIG_PATH
                 sed -i "s/IMAGE_TAG/${DOCKER_TAG}/g" k8s/deployment.yaml
                 kubectl apply -f k8s/deployment.yaml
                 kubectl apply -f k8s/service.yaml
