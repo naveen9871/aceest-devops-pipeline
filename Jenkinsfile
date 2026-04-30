@@ -29,11 +29,13 @@ pipeline {
                     PYTHONPATH=. python -m pytest -q --cov=aceest_app --junitxml=pytest-report.xml
                 '''
             }
+/*
             post {
                 always {
                     junit 'pytest-report.xml'
                 }
             }
+*/
         }
 
 /*
