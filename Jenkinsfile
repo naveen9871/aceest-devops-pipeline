@@ -6,7 +6,7 @@ pipeline {
         DOCKER_TAG = "${env.BUILD_NUMBER}"
         SONARQUBE_SERVER = "sonarqube"
         KUBECONFIG_PATH = "/var/jenkins_home/kubeconfig"
-        DOCKER_CRED = credentials('dockerhub-credentials')
+        // DOCKER_CRED = credentials('dockerhub-credentials')
     }
 
     stages {
@@ -36,6 +36,7 @@ pipeline {
             }
         }
 
+/*
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv(SONARQUBE_SERVER) {
@@ -51,6 +52,7 @@ pipeline {
                 }
             }
         }
+*/
 
         stage('Build Docker Image') {
             steps {
@@ -58,6 +60,7 @@ pipeline {
             }
         }
 
+/*
         stage('Push to Docker Hub') {
             steps {
                 sh "echo \$DOCKER_CRED_PSW | docker login -u \$DOCKER_CRED_USR --password-stdin"
@@ -65,6 +68,7 @@ pipeline {
                 sh "docker push ${DOCKER_IMAGE}:latest"
             }
         }
+*/
 
         stage('Deploy to Kubernetes') {
             steps {
