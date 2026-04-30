@@ -1,0 +1,12 @@
+version: '3'
+services:
+  sonarqube:
+    image: sonarqube:lts-community
+    ports:
+      - "9000:9000"
+    networks:
+      - aceest-pipeline
+networks:
+  aceest-pipeline:
+    external:
+      name: aceest-devops-pipeline_default

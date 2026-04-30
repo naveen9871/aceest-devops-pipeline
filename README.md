@@ -1,7 +1,7 @@
 # 🚀 ACEest Fitness & Gym – End-to-End CI/CD Pipeline
 
 [![CI/CD Status](https://img.shields.io/badge/Pipeline-Build_Success-success?style=for-the-badge&logo=jenkins)](http://localhost:8085)
-[![Docker Hub](https://img.shields.io/badge/Docker_Hub-naveen9871/aceest--app-blue?style=for-the-badge&logo=docker)](https://hub.docker.com/r/naveen9871/aceest-app)
+[![Docker Hub](https://img.shields.io/badge/Docker_Hub-naveen1312/aceest--app-blue?style=for-the-badge&logo=docker)](https://hub.docker.com/r/naveen1312/aceest-app)
 [![Kubernetes](https://img.shields.io/badge/K8s-Deployed_to_Minikube-blue?style=for-the-badge&logo=kubernetes)](#)
 
 A production-grade fitness management platform built with **Flask**, containerized with **Docker**, and orchestrated with **Kubernetes**. This repository serves as a complete demonstration of modern DevOps practices, including automated testing, static code analysis (SonarQube), and advanced deployment strategies.
@@ -102,4 +102,4 @@ kubectl port-forward service/aceest-app-service 5000:80
 **Naveen Mupparaju**  
 *M.Tech - BITS Pilani*  
 ID: 2024TM93514  
-GitHub: [@naveen9871](https://github.com/naveen9871)
+GitHub: [@naveen1312](https://github.com/naveen1312)

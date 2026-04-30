@@ -2,7 +2,7 @@
 
 **Name:** Naveen Mupparaju  
 **ID Number:** 2024TM93514  
-**GitHub Repository:** [https://github.com/naveen9871/aceest-devops-pipeline](https://github.com/naveen9871/aceest-devops-pipeline)
+**GitHub Repository:** [https://github.com/naveen1312/aceest-devops-pipeline](https://github.com/naveen1312/aceest-devops-pipeline)
 
 ---
 
