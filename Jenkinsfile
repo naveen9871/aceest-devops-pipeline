@@ -56,11 +56,13 @@ pipeline {
         }
 */
 
+/*
         stage('Build Docker Image') {
             steps {
                 sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} -t ${DOCKER_IMAGE}:latest ."
             }
         }
+*/
 
 /*
         stage('Push to Docker Hub') {
